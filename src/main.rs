@@ -23,15 +23,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut urls: Vec<String> = Vec::new();
     let args: Vec<String> = env::args().collect();
     let today = Local::now();
-    let before = if args.len() >= 2 {
+    let (weekday, before) = if args.len() >= 2 {
         let weekday = today.weekday().num_days_from_monday() as i32;
-        (weekday - args[1].parse::<i32>()? + 7) % 7
+        (weekday, (weekday - args[1].parse::<i32>()? + 7) % 7)
     } else {
-        1
+        ((today.weekday().num_days_from_monday() as i32 - 1 + 7) % 7, 1)
     }
 
     for url_tpl in url_tpls {
-        let lastest_delta = if before == 0 {
+        let lastest_delta = if weekday == url_tpl.0 {
             let url_time = url_tpl.1[30..].parse::<i32>()?;
             let today_time = today.format("%H%M%S").to_string().parse::<i32>()?;
             if url_time < today_time {
@@ -62,7 +62,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 eprintln!("failure: yt-dlp");
                 let mut content = String::new();
                 for url in urls {
-                    content.push_str(url);
+                    content.push_str(&url);
                     content.push('\n');
                 }
                 fs::write("downloading", &content);
