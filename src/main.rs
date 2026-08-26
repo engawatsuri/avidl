@@ -28,7 +28,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         (weekday, (weekday - args[1].parse::<i32>()? + 7) % 7)
     } else {
         ((today.weekday().num_days_from_monday() as i32 - 1 + 7) % 7, 1)
-    }
+    };
 
     for url_tpl in url_tpls {
         let lastest_delta = if weekday == url_tpl.0 {
@@ -49,7 +49,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     println!("number of downloading: {}", urls.len());
-    for url in urls {
+    for url in &urls {
         let output = Command::new("yt-dlp").arg(&url).output();
         match output {
             Ok(out) if out.status.success() => {
@@ -61,7 +61,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             Err(_e) => {
                 eprintln!("failure: yt-dlp");
                 let mut content = String::new();
-                for url in urls {
+                for url in &urls {
                     content.push_str(&url);
                     content.push('\n');
                 }
