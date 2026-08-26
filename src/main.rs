@@ -5,8 +5,7 @@ use chrono::TimeDelta;
 use chrono::Datelike;
 use std::process::Command;
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
         eprintln!("error: no match cmd");
