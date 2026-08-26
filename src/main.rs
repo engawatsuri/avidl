@@ -20,6 +20,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut urls: Vec<String> = Vec::new();
     let url_tpls: [(i32, &str); 12] = [
         (1, "http://radiko.jp/#!/ts/TBS/{}000000"), // 空気階段の踊り場
+        (1, "http://radiko.jp/#!/ts/TBS/{}010000"), // JUNK 伊集院光 深夜の馬鹿力
         (2, "http://radiko.jp/#!/ts/TBS/{}000000"), // アルコ&ピース D.C.GARAGE
         (2, "http://radiko.jp/#!/ts/TBS/{}010000"), // JUNK 爆笑問題カーボーイ
         (2, "http://radiko.jp/#!/ts/KBS/{}193000"), // 角田龍平の蛤御門のヘン
