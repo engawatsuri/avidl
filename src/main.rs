@@ -7,16 +7,6 @@ use chrono::TimeDelta;
 use chrono::Datelike;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let args: Vec<String> = env::args().collect();
-    if args.len() < 2 {
-        eprintln!("error: no match cmd");
-        return Ok(());
-    }
-
-    let today = Local::now();
-    let weekday = today.weekday().num_days_from_monday() as i32;
-    let before = (weekday - args[1].parse::<i32>()? + 7) % 7;
-    let mut urls: Vec<String> = Vec::new();
     let url_tpls: [(i32, &str); 12] = [
         (1, "http://radiko.jp/#!/ts/TBS/{}000000"), // 空気階段の踊り場
         (1, "http://radiko.jp/#!/ts/TBS/{}010000"), // JUNK 伊集院光 深夜の馬鹿力
@@ -31,9 +21,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         (5, "http://radiko.jp/#!/ts/OBC/{}230000"), // 森久保祥太郎・浪川大輔　つまみは塩だけ
         (6, "http://radiko.jp/#!/ts/LFR/{}010000"), // オードリーのオールナイトニッポン
     ];
+    let mut urls: Vec<String> = Vec::new();
+    let args: Vec<String> = env::args().collect();
+    let today = Local::now();
+    let before = if args.len() >= 2 {
+        weekday = today.weekday().num_days_from_monday() as i32;
+        (weekday - args[1].parse::<i32>()? + 7) % 7
+    } else {
+        1
+    }
 
     for url_tpl in url_tpls {
-        let lastest_delta = if weekday == url_tpl.0 {
+        let lastest_delta = if before == 0 {
             let url_time = url_tpl.1[30..].parse::<i32>()?;
             let today_time = today.format("%H%M%S").to_string().parse::<i32>()?;
             if url_time < today_time {
