@@ -1,9 +1,10 @@
 use std::env;
+use std::fs;
+use std::process::Command;
 use std::sync::Arc;
 use chrono::Local;
 use chrono::TimeDelta;
 use chrono::Datelike;
-use std::process::Command;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = env::args().collect();
@@ -61,6 +62,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
             Err(_e) => {
                 eprintln!("failure: yt-dlp");
+                let mut content = String::new();
+                for url in urls {
+                    content.push_str(url);
+                    content.push('\n');
+                }
+                fs::write("downloading", &content);
+                return Ok(());
             }
         }
     }
