@@ -1,7 +1,6 @@
 use std::env;
 use std::fs;
 use std::process::Command;
-use std::sync::Arc;
 use chrono::Local;
 use chrono::TimeDelta;
 use chrono::Datelike;
@@ -25,7 +24,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = env::args().collect();
     let today = Local::now();
     let before = if args.len() >= 2 {
-        weekday = today.weekday().num_days_from_monday() as i32;
+        let weekday = today.weekday().num_days_from_monday() as i32;
         (weekday - args[1].parse::<i32>()? + 7) % 7
     } else {
         1
