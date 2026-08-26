@@ -3,8 +3,7 @@ use std::sync::Arc;
 use chrono::Local;
 use chrono::TimeDelta;
 use chrono::Datelike;
-use tokio::process::Command;
-use tokio::sync::Semaphore;
+use std::process::Command;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -51,31 +50,20 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
 
-    println!("number of radio: {}", urls.len());
-    let semaphore = Arc::new(Semaphore::new(4));
-    let mut handles = vec![];
+    println!("number of downloading: {}", urls.len());
     for url in urls {
-        let sem = Arc::clone(&semaphore);
-        let handle = tokio::spawn(async move {
-            let _permit = sem.acquire().await.unwrap();
-            let output = Command::new("yt-dlp").arg(&url).output().await;
-            match output {
-                Ok(out) if out.status.success() => {
-                    println!("success: {}", url);
-                }
-                Ok(_out) => {
-                    eprintln!("failure: {}", url);
-                }
-                Err(_e) => {
-                    eprintln!("failure: yt-dlp");
-                }
+        let output = Command::new("yt-dlp").arg(&url).output();
+        match output {
+            Ok(out) if out.status.success() => {
+                println!("success: {}", url);
             }
-        });
-        handles.push(handle);
-    }
-
-    for handle in handles {
-        let _ = handle.await;
+            Ok(_out) => {
+                eprintln!("failure: {}", url);
+            }
+            Err(_e) => {
+                eprintln!("failure: yt-dlp");
+            }
+        }
     }
 
     Ok(())
