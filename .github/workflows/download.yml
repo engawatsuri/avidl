@@ -7,9 +7,16 @@ on:
         description: 'weekday'
         required: false
         default: ''
+  schedule:
+    - cron: '0 0 * * *'
+      timezone: Asia/Tokyo
+
+env:
+  CARGO_TERM_COLOR: always
+  TZ: Asia/Tokyo
 
 jobs:
-  run-app:
+  radiko:
     runs-on: ubuntu-latest
 
     steps:
