@@ -65,7 +65,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     content.push_str(&url);
                     content.push('\n');
                 }
-                fs::write("downloading", &content);
+                let _ = fs::write("downloading", &content);
                 return Ok(());
             }
         }
