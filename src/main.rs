@@ -63,13 +63,19 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         }
                     }
                 }
+            } else {
+                todo!();
             }
         }
     }
 
     println!("number of downloading: {}", urls.len());
     for url in &urls {
-        let output = Command::new("yt-dlp").arg(&url).output();
+        let output = if url.starts_with("http://radiko.jp") {
+            Command::new("yt-dlp").arg(&url).output()
+        } else {
+            Command::new("yt-dlp").args(["-f", "134+139", &url]).output()
+        }
         match output {
             Ok(out) if out.status.success() => {
                 println!("success: {}", url);
