@@ -57,7 +57,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     if let Some(time) = entry.published {
                         if start <= time && time < start + Duration::days(1) {
                             if let Some(link) = entry.links.first() {
-                                urls.push(link.href);
+                                urls.push(link.href.clone());
                                 break;
                             }
                         }
