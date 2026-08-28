@@ -33,7 +33,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = env::args().collect();
     let today = Local::now();
     let weekday = today.weekday().num_days_from_monday() as i32;
-    let (weekday, before) = if args.len() >= 2 && Ok(before_weekday) = args[1].parse::<Weekday>() {
+    let before = if args.len() >= 2 && let Ok(before_weekday) = args[1].parse::<Weekday>() {
         (weekday - before_weekday.num_days_from_monday() as i32 + 7) % 7
     } else {
         1
@@ -75,7 +75,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             Command::new("yt-dlp").arg(&url).output()
         } else {
             Command::new("yt-dlp").args(["-f", "134+139", &url]).output()
-        }
+        };
         match output {
             Ok(out) if out.status.success() => {
                 println!("success: {}", url);
