@@ -3,9 +3,7 @@ use std::fs;
 use std::process::Command;
 use chrono::Local;
 use chrono::TimeDelta;
-use chrono::DateTime;
 use chrono::Datelike;
-use chrono::Duration;
 use chrono::Weekday;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
