@@ -8,8 +8,7 @@ on:
         required: false
         default: ''
   schedule:
-    - cron: '0 0 * * *'
-      timezone: Asia/Tokyo
+    - cron: '0 18 * * *'
 
 env:
   CARGO_TERM_COLOR: always
@@ -44,7 +43,7 @@ jobs:
           mv *.m4a radiko/ || true
 
       - name: Upload
-        uses: actions/upload-artifact@v4
+        uses: actions/artifacts@v4
         with:
           name: upload
           path: radiko/
