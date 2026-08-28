@@ -43,7 +43,7 @@ jobs:
           mv *.m4a radiko/ || true
 
       - name: Upload
-        uses: actions/artifacts@v4
+        uses: actions/upload-artifact@v4
         with:
           name: upload
           path: radiko/
