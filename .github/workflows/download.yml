@@ -40,7 +40,7 @@ jobs:
       - name: Collect
         run: |
           mkdir -p radiko
-          mv *.m4a radiko/ || true
+          mv *.{m4a,mp4} radiko/ || true
 
       - name: Upload
         uses: actions/upload-artifact@v4
