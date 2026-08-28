@@ -3,14 +3,14 @@ use std::fs;
 use std::process::Command;
 use chrono::Local;
 use chrono::TimeDelta;
-use chrono::Datelike;
+use chrono::DateTime;
 use chrono::Duration;
-use chrono::NativeDateTime;
+use chrono::NaiveDateTime;
 use chrono::TimeZone;
 use chrono::Utc;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let url_tpls: [(i32, &str); 12] = [
+    let url_tpls: [(i32, &str); 15] = [
         (1, "http://radiko.jp/#!/ts/TBS/{}000000"), // 空気階段の踊り場
         (1, "http://radiko.jp/#!/ts/TBS/{}010000"), // JUNK 伊集院光 深夜の馬鹿力
         (2, "http://radiko.jp/#!/ts/TBS/{}000000"), // アルコ&ピース D.C.GARAGE
@@ -56,11 +56,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             } else if url_tpl.1.starts_with("https://www.youtube.com") {
                 let response = ureq::get(url_tpl.1).call()?.into_reader();
                 let feed = feed_rs::parser::parse(response)?;
-                let start_native = NativeDateTime::new(
-                    today.date_native().sub(Duration::days(lastest_delta)),
-                    chrono::NativeTime::from_hms_opt(0, 0, 0).unwrap()
+                let start_naive = NaiveDateTime::new(
+                    today.date_naive().sub(Duration::days(lastest_delta as i32)),
+                    chrono::NaiveTime::from_hms_opt(0, 0, 0).unwrap()
                 );
-                let start: DateTime<Utc> = Local.from_local_datetime(&start_native).unwrap().with_timezone(&Utc);
+                let start: DateTime<Utc> = Local.from_local_datetime(&start_naive).unwrap().with_timezone(&Utc);
                 for entry in feed.entries {
                     if let Some(time) = entry.published {
                         if start <= time && time < start + Duration::days(1) {
