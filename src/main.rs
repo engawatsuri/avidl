@@ -33,7 +33,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     for url_tpl in url_tpls {
         let lastest_delta = (weekday - url_tpl.0 + 7) % 7;
-        if lastest_delta < 7 && lastest_delta <= before {
+        if lastest_delta != 0 && lastest_delta <= before {
             let lastest = today - TimeDelta::days(lastest_delta as i64);
             urls.push(url_tpl.1.to_string().replace("{}", &lastest.format("%Y%m%d").to_string()));
         }
