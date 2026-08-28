@@ -4,10 +4,12 @@ use std::process::Command;
 use chrono::Local;
 use chrono::TimeDelta;
 use chrono::DateTime;
+use chrono::Datelike;
 use chrono::Duration;
 use chrono::NaiveDateTime;
 use chrono::TimeZone;
 use chrono::Utc;
+use chrono::Weekday;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let url_tpls: [(i32, &str); 15] = [
@@ -30,26 +32,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut urls: Vec<String> = Vec::new();
     let args: Vec<String> = env::args().collect();
     let today = Local::now();
-    let (weekday, before) = if args.len() >= 2 {
-        let weekday = today.weekday().num_days_from_monday() as i32;
-        (weekday, (weekday - args[1].parse::<i32>()? + 7) % 7)
+    let weekday = today.weekday().num_days_from_monday() as i32;
+    let (weekday, before) = if args.len() >= 2 && Ok(before_weekday) = args[1].parse::<Weekday>() {
+        (weekday - before_weekday.num_days_from_monday() as i32 + 7) % 7
     } else {
-        ((today.weekday().num_days_from_monday() as i32 - 1 + 7) % 7, 1)
+        1
     };
 
     for url_tpl in url_tpls {
-        let lastest_delta = if weekday == url_tpl.0 {
-            let url_time = url_tpl.1[30..].parse::<i32>()?;
-            let today_time = today.format("%H%M%S").to_string().parse::<i32>()?;
-            if url_time < today_time {
-                continue;
-            } else {
-                7
-            }
-        } else {
-            (weekday - url_tpl.0 + 7) % 7
-        };
-        if lastest_delta <= before {
+        let lastest_delta = (weekday - url_tpl.0 + 7) % 7;
+        if lastest_delta < 7 && lastest_delta <= before {
             if url_tpl.1.starts_with("http://radiko.jp") {
                 let lastest = today - TimeDelta::days(lastest_delta as i64);
                 urls.push(url_tpl.1.to_string().replace("{}", &lastest.format("%Y%m%d").to_string()));
@@ -57,7 +49,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let response = ureq::get(url_tpl.1).call()?.into_reader();
                 let feed = feed_rs::parser::parse(response)?;
                 let start_naive = NaiveDateTime::new(
-                    today.date_naive().sub(Duration::days(lastest_delta as i32)),
+                    today.date_naive() - Duration::days(lastest_delta as i64),
                     chrono::NaiveTime::from_hms_opt(0, 0, 0).unwrap()
                 );
                 let start: DateTime<Utc> = Local.from_local_datetime(&start_naive).unwrap().with_timezone(&Utc);
