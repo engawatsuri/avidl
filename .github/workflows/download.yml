@@ -55,4 +55,4 @@ jobs:
           RCLONE_CONFIG_MYDRIVE_ROOT_FOLDER_ID: '17wZ5CRm5T1Fgfk3rtzyzO2EcBTUluzZr'
           RCLONE_CONFIG_MYDRIVE_SERVICE_ACCOUNT_BLANK: true
         with:
-          args: copy radiko/ mydrive:
+          args: "copy radiko/ mydrive:"
