@@ -37,6 +37,11 @@ jobs:
       - name: Build and Download
         run: cargo run -- ${{ github.event.inputs.weekday }}
 
+      - name: Collect
+        run: |
+          mkdir -p radiko
+          mv *.m4a radiko/ || true
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
@@ -50,4 +55,4 @@ jobs:
           RCLONE_CONFIG_MYDRIVE_ROOT_FOLDER_ID: '17wZ5CRm5T1Fgfk3rtzyzO2EcBTUluzZr'
           RCLONE_CONFIG_MYDRIVE_SERVICE_ACCOUNT_BLANK: true
         with:
-          args: copy *.m4a mydrive:
+          args: copy radiko/ mydrive:
