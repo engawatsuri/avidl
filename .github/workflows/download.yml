@@ -40,19 +40,10 @@ jobs:
       - name: Collect
         run: |
           mkdir -p radiko
-          mv *.m4a radiko/ || true
+          mv *.{m4a,mp4} radiko/ || true
 
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
+      - name: Upload
+        uses: actions/upload-artifact@v6
         with:
-          credentials_json: ${{ secrets.SAVING_KEY }}
-
-      - name: Save from Google Drive
-        uses: wei/rclone@v1
-        env:
-          RCLONE_CONFIG_MYDRIVE_TYPE: drive
-          RCLONE_CONFIG_MYDRIVE_SCOPE: drive
-          RCLONE_CONFIG_MYDRIVE_ROOT_FOLDER_ID: '17wZ5CRm5T1Fgfk3rtzyzO2EcBTUluzZr'
-          RCLONE_CONFIG_MYDRIVE_SERVICE_ACCOUNT_BLANK: true
-        with:
-          args: "copy radiko/ mydrive:"
+          name: upload
+          path: radiko/
