@@ -46,11 +46,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             Ok(out) if out.status.success() => {
                 println!("success: {}", url);
             }
-            Ok(_out) => {
-                eprintln!("failure: {}", url);
+            Ok(out) => {
+                let stderr = String::from_utf8_lossy(&out.stderr);
+                eprintln!("failure ({}): {}", out.status, url);
+                eprintln!("{}", stderr);
             }
             Err(_e) => {
-                eprintln!("failure: yt-dlp");
+                eprintln!("failure: no found yt-dlp");
                 let mut content = String::new();
                 for url in &urls {
                     content.push_str(&url);
