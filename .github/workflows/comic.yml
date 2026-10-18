@@ -38,6 +38,9 @@ jobs:
         run: |
           mkdir -p comic
           mv ^[0-9]+ comic/ || true
+          for d in [0-9]*; do
+            [ -d "$d" ] && mv "$d" comic/
+          done
           zip -r comic.zip comic
 
       - name: Upload
