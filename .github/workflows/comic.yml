@@ -1,18 +1,15 @@
-name: Download
+name: Comic
 
 on:
   workflow_dispatch:
     inputs:
       id:
-        description: 'id'
         required: false
         default: ''
       start:
-        description: 'start'
         required: false
         default: ''
       end:
-        description: 'end'
         required: false
         default: ''
 
@@ -41,10 +38,11 @@ jobs:
         run: |
           mkdir -p comic
           mv ^[0-9]+ comic/ || true
+          zip -r comic.zip comic
 
       - name: Upload
-        uses: actions/upload-artifact@v6
+        uses: willo32/google-drive-upload-action@v1
         with:
-          name: upload
-          path: comic/
-          retention-days: 1
+          target: comic.zip
+          credentials: ${{ secrets.GDRIVE_CREDENTIALS }}
+          parent_folder_id: ${{ secrets.GDRIVE_FOLDER_ID }}
