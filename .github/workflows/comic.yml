@@ -22,7 +22,7 @@ defaults:
     working-directory: ./comic
 
 jobs:
-  radiko:
+  download:
     runs-on: ubuntu-latest
 
     steps:
@@ -37,7 +37,6 @@ jobs:
       - name: Collect
         run: |
           mkdir -p comic
-          mv ^[0-9]+ comic/ || true
           for d in [0-9]*; do
             [ -d "$d" ] && mv "$d" comic/
           done
@@ -46,6 +45,6 @@ jobs:
       - name: Upload
         uses: willo32/google-drive-upload-action@v1
         with:
-          target: comic.zip
+          target: comic/comic.zip
           credentials: ${{ secrets.GDRIVE_CREDENTIALS }}
           parent_folder_id: ${{ secrets.GDRIVE_FOLDER_ID }}
