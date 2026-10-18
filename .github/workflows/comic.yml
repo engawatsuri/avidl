@@ -1,0 +1,50 @@
+name: Download
+
+on:
+  workflow_dispatch:
+    inputs:
+      id:
+        description: 'id'
+        required: false
+        default: ''
+      start:
+        description: 'start'
+        required: false
+        default: ''
+      end:
+        description: 'end'
+        required: false
+        default: ''
+
+env:
+  CARGO_TERM_COLOR: always
+  TZ: Asia/Tokyo
+
+defaults:
+  run:
+    working-directory: ./comic
+
+jobs:
+  radiko:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+
+      - name: Build and Download
+        run: cargo run -- ${{ github.event.inputs.id }} ${{ github.event.inputs.start }} ${{ github.event.inputs.end }}
+
+      - name: Collect
+        run: |
+          mkdir -p comic
+          mv ^[0-9]+ comic/ || true
+
+      - name: Upload
+        uses: actions/upload-artifact@v6
+        with:
+          name: upload
+          path: comic/
+          retention-days: 1
