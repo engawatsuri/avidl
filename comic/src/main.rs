@@ -15,14 +15,13 @@ async fn download_chapter(client: Client, m: String, ch: i32) -> Result<(), Box<
         fs::create_dir_all(dir_path)?;
     }
 
-    let mut origin_html;
     let mut img = 0;
 
     let origin = client.get(format!("https://mangarawad.city/manga/{}/chapter-{}", m, ch)).send().await?;
-    if origin.status().is_success() {
+    let origin_html = if origin.status().is_success() {
         match origin.text().await {
             Ok(html) => {
-                origin_html = html;
+                html
             }
             Err(_) => {
                 println!("{}: internal: no origin", ch);
@@ -30,11 +29,9 @@ async fn download_chapter(client: Client, m: String, ch: i32) -> Result<(), Box<
             }
         }
     } else {
-        if img == 0 {
-            println!("{}: internal: no origin", ch);
-        }
+        println!("{}: internal: no origin", ch);
         return Ok(());
-    }
+    };
 
     
     let target = vec![
