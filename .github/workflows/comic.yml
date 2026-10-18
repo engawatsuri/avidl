@@ -43,8 +43,8 @@ jobs:
           zip -r comic.zip comic
 
       - name: Upload
-        uses: willo32/google-drive-upload-action@v1
+        uses: actions/upload-artifact@v6
         with:
-          target: comic/comic.zip
-          credentials: ${{ secrets.GDRIVE_CREDENTIALS }}
-          parent_folder_id: ${{ secrets.GDRIVE_FOLDER_ID }}
+          name: upload
+          path: comic/comic/
+          retention-days: 1
