@@ -2,10 +2,9 @@ use std::env;
 use std::fs::{self, File};
 use std::io::Write;
 use std::path::Path;
-use std::sync::Arc;
 use std::time::Duration;
 use futures::stream::{self, StreamExt};
-use reqwest::{Client, StatusCode};
+use reqwest::Client;
 
 async fn download_chapter(client: Client, m: String, ch: i32) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let dir_name = format!("{:03}", ch);
@@ -16,7 +15,7 @@ async fn download_chapter(client: Client, m: String, ch: i32) -> Result<(), Box<
         fs::create_dir_all(dir_path)?;
     }
 
-    let mut origin_html = String::new();
+    let mut origin_html;
     let mut img = 0;
 
     let origin = client.get(format!("https://mangarawad.city/manga/{}/chapter-{}", m, ch)).send().await?;
@@ -44,7 +43,7 @@ async fn download_chapter(client: Client, m: String, ch: i32) -> Result<(), Box<
         ("https://iphotomg.com/{}/chapter_{}/image_{}.webp", "webp"),
         ("https://iphotomg.com/{}/chapter_{}/{}.webp", "webp"),
     ];
-    for (t, ex) in target.iter() {
+    for (t, _ex) in target.iter() {
         let url = t.replacen("{}", &m, 1).replacen("{}", &ch.to_string(), 1).replacen("{}", &img.to_string(), 1);
         if origin_html.contains(&url) {
             break;
