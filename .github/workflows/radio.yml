@@ -1,4 +1,4 @@
-name: Download
+name: Radio
 
 on:
   workflow_dispatch:
@@ -40,11 +40,13 @@ jobs:
       - name: Collect
         run: |
           mkdir -p radiko
-          mv *.{m4a,mp4} radiko/ || true
+          mv *.m4a radiko/ || true
+          YESTERDAY=$(date -d "yesterday" '+%Y_%m_%d')
+          echo "YESTERDAY_DATE=$YESTERDAY" >> $GITHUB_ENV
 
       - name: Upload
         uses: actions/upload-artifact@v6
         with:
-          name: upload
+          name: upload-${{ env.YESTERDAY_DATE }}
           path: radiko/
           retention-days: 7
