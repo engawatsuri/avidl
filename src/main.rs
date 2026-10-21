@@ -39,6 +39,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
 
+    let mut success = true;
     println!("number of downloading: {}", urls.len());
     for url in &urls {
         let output = Command::new("yt-dlp").arg(&url).output();
@@ -50,6 +51,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let stderr = String::from_utf8_lossy(&out.stderr);
                 eprintln!("failure ({}): {}", out.status, url);
                 eprintln!("{}", stderr);
+                success = false;
             }
             Err(_e) => {
                 eprintln!("failure: no found yt-dlp");
@@ -59,10 +61,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     content.push('\n');
                 }
                 let _ = fs::write("downloading", &content);
+                success = false;
                 return Ok(());
             }
         }
     }
 
-    Ok(())
+    if success {
+        Ok(())
+    } else {
+        Err("cannot download all radio".into())
+    }
 }
