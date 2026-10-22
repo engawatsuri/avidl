@@ -1,5 +1,4 @@
 use std::env;
-use std::fs;
 use std::process::Command;
 use chrono::Local;
 use chrono::TimeDelta;
@@ -57,4 +56,5 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
         }
     }
+    Ok(())
 }
