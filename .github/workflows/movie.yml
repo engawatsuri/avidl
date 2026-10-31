@@ -23,6 +23,7 @@ jobs:
       - name: Install yt-dlp
         run: |
           python3 -m pip install --upgrade pip
+          pip3 install yt-dlp
 
       - name: Download
         run: yt-dlp -f ${{ github.event.inputs.format }} ${{ github.event.inputs.id }}
