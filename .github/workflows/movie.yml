@@ -1,0 +1,40 @@
+name: Movie
+
+on:
+  workflow_dispatch:
+    inputs:
+      format:
+        required: false
+      id:
+        required: false
+
+jobs:
+  movie:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install ffmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Install yt-dlp
+        run: |
+          python3 -m pip install --upgrade pip
+
+      - name: Download
+        run: yt-dlp -f ${{ github.event.inputs.format }} ${{ github.event.inputs.id }}
+
+      - name: Collect
+        run: |
+          mkdir -p movie
+          mv *.mp4 movie/ || true
+
+      - name: Upload
+        uses: actions/upload-artifact@v6
+        with:
+          name: upload-movie
+          path: movie/
+          retention-days: 1
