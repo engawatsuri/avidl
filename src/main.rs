@@ -6,7 +6,7 @@ use chrono::Datelike;
 use chrono::Weekday;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let url_tpls: [(i32, &str); 12] = [
+    let url_tpls: [(i32, &str); 15] = [
         (1, "http://radiko.jp/#!/ts/TBS/{}000000"), // 空気階段の踊り場
         (1, "http://radiko.jp/#!/ts/TBS/{}010000"), // JUNK 伊集院光 深夜の馬鹿力
         (2, "http://radiko.jp/#!/ts/TBS/{}000000"), // アルコ&ピース D.C.GARAGE
@@ -16,9 +16,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         (3, "http://radiko.jp/#!/ts/TBS/{}010000"), // 山里亮太の不毛な議論
         (3, "http://radiko.jp/#!/ts/LFR/{}030000"), // 佐久間宣行のオールナイトニッポン0(ZERO)
         (4, "http://radiko.jp/#!/ts/TBS/{}000000"), // ハライチのターン！
-        (4, "http://radiko.jp/#!/ts/LFR/{}010000"), // ナインティナインのオールナイトニッポン
+        (4, "http://radiko.jp/#!/ts/LFR/{}010000"), // ナインティナイン岡村隆史のオールナイトニッポン
+        (5, "http://radiko.jp/#!/ts/LFR/{}010000"), // 霜降り明星のオールナイトニッポン
+        (5, "http://radiko.jp/#!/ts/LFR/{}175000"), // ナインティナイン矢部浩之オモテのラジオ
         (5, "http://radiko.jp/#!/ts/OBC/{}230000"), // 森久保祥太郎・浪川大輔　つまみは塩だけ
         (6, "http://radiko.jp/#!/ts/LFR/{}010000"), // オードリーのオールナイトニッポン
+        (6, "http://radiko.jp/#!/ts/TBS/{}100000"), // 安住紳一郎の日曜天国
     ];
     let mut urls: Vec<String> = Vec::new();
     let args: Vec<String> = env::args().collect();
